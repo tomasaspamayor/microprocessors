@@ -14,13 +14,14 @@ setup:
 	goto	start
 	
 temmuztable:
-	db	'T','E','M','M','U','Z'
+	db	'T','E','M','M','U','Z','T','U','M','A','Y'
 	counter EQU 0x00
 	table EQU 0x01
 	align	2
 	
 delay:	decfsz	0x20, A
 	bra delay
+	bra delay 
 	return
     
 start:
@@ -31,18 +32,17 @@ start:
 	movwf	TBLPTRL, A
 	movlw	high (temmuztable) 
 	movwf	TBLPTRH, A 
-	movlw	6		; 22 bytes to read
+	movlw	12		; 22 bytes to read
 	movwf 	counter, A
 
 loop:
 	tblrd*+
 	movff	TABLAT, PORTB
 	decfsz	counter, A	; count down to zero
-	movlw	0x10 
+	movlw	0xFF 
 	movwf	0x20, A 
 	call	delay
 	bra	loop		; keep going until finished
 	
-	goto	0
-
+	goto	start
 	end	main
