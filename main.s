@@ -6,33 +6,41 @@ main:
 	goto	setup
 	
 	org 0x100		    ; Main code starts here at address 0x100
-
-	; ******* Programme FLASH read Setup Code ****  
 setup:	
 	bcf	CFGS	; point to Flash program memory  
 	bsf	EEPGD 	; access Flash program memory
+	movlw	0x00
+	movwf	TRISB, A
 	goto	start
-	; ******* My data and where to put it in RAM *
-myTable:
-	db	'T','h','i','s',' ','i','s',' ','j','u','s','t',' ','s','o','m','e',' ','d','a','t','a'
-	myArray EQU 0x20	; Address in RAM for data
-	counter EQU 0x10	; Address of counter variable
-	align	2		; ensure alignment of subsequent instructions 
-	; ******* Main programme *********************
-start:	
-	lfsr	0, myArray	; Load FSR0 with address in RAM	
-	movlw	low highword(myTable)	; address of data in PM
-	movwf	TBLPTRU, A	; load upper bits to TBLPTRU
-	movlw	high(myTable)	; address of data in PM
-	movwf	TBLPTRH, A	; load high byte to TBLPTRH
-	movlw	low(myTable)	; address of data in PM
-	movwf	TBLPTRL, A	; load low byte to TBLPTRL
-	movlw	22		; 22 bytes to read
-	movwf 	counter, A	; our counter register
+	
+temmuztable:
+	db	'T','E','M','M','U','Z'
+	counter EQU 0x00
+	table EQU 0x01
+	align	2
+	
+delay:	decfsz	0x20, A
+	bra delay
+	return
+    
+start:
+	lfsr	0, table    ; load table ino FSR0 
+	movlw	low highword(temmuztable)
+	movwf	TBLPTRU, A
+	movlw	low (temmuztable) 
+	movwf	TBLPTRL, A
+	movlw	high (temmuztable) 
+	movwf	TBLPTRH, A 
+	movlw	6		; 22 bytes to read
+	movwf 	counter, A
+
 loop:
-        tblrd*+			; move one byte from PM to TABLAT, increment TBLPRT
-	movff	TABLAT, POSTINC0	; move read data from TABLAT to (FSR0), increment FSR0	
+	tblrd*+
+	movff	TABLAT, PORTB
 	decfsz	counter, A	; count down to zero
+	movlw	0x10 
+	movwf	0x20, A 
+	call	delay
 	bra	loop		; keep going until finished
 	
 	goto	0
