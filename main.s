@@ -25,8 +25,8 @@ start:
 sawtooth: ; sawtooth function generator
 	btg	PORTD, 0, A
 	
-	movlw	0x07 ; move 7 into w
-	cpfsgt	0x02, A ; skip loop if counter is less than 7
+	movlw	0x02 ; move 2 into w
+	cpfsgt	0x02, A ; skip loop if counter is less than w
 	bra	skiploop
 	
 	movlw	0x00
