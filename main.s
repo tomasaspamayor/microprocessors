@@ -1,7 +1,7 @@
 #include <xc.inc>
 
-extrn	UART_Setup, UART_Transmit_Message  ; external subroutines
-extrn	LCD_Setup, LCD_Write_Message, LCD_Clear, LCD_Newline
+extrn	Keypad_Setup, Keypad_Read  ; external subroutines
+extrn	LCD_Setup, LCD_Write_Message, LCD_Clear, LCD_Newline, LCD_Send_Byte_I
 	
 psect	udata_acs   ; reserve data space in access ram
 counter:    ds 1    ; reserve one byte for a counter variable
@@ -25,32 +25,16 @@ rst: 	org 0x0
 	; ******* Programme FLASH read Setup Code ***********************
 setup:	bcf	CFGS	; point to Flash program memory  
 	bsf	EEPGD 	; access Flash program memory
-	call	UART_Setup	; setup UART
+	call	Keypad_Setup	; setup keypad
 	call	LCD_Setup	; setup UART
-	goto	start
+	goto	loop
 	
 	; ******* Main programme ****************************************
-start: 	lfsr	0, myArray	; Load FSR0 with address in RAM	
-	movlw	low highword(myTable)	; address of data in PM
-	movwf	TBLPTRU, A		; load upper bits to TBLPTRU
-	movlw	high(myTable)	; address of data in PM
-	movwf	TBLPTRH, A		; load high byte to TBLPTRH
-	movlw	low(myTable)	; address of data in PM
-	movwf	TBLPTRL, A		; load low byte to TBLPTRL
-	movlw	myTable_l	; bytes to read
-	movwf 	counter, A		; our counter register
-		
-;	movlw	myTable_l	; output message to UART
-;	lfsr	2, myArray
-;	call	UART_Transmit_Message
-
-	movf	counter, W, A
-	call	LCD_Write_Message
+loop: 	
+	call	Keypad_Read	    ; store key press in W 
+	call	LCD_Send_Byte_I	    ; send byte stored in W
 	
-	; write to the second line
-	call	LCD_Newline
-	
-	goto	$		; goto current line in code
+	bra	loop		; goto current line in code
 	; a delay subroutine if you need one, times around loop in delay_count
 	
 	
