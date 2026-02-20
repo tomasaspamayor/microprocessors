@@ -23,7 +23,6 @@ Keypad_R_Rows:	; step 1
 	movwf	TRISE, A	; set the first 4 as output, last 4 as input
 	
 	movf	PORTE, W, A 
-	andlw	0x0F   ; mask input (first 4 pins) from rows 
 	movwf	Row_State, A 
 	return 
 	
@@ -33,7 +32,7 @@ Keypad_R_Cols:
 	movwf	TRISE, A	; set the last 4 as output, first 4 as input
 	
 	movf	PORTE, W, A
-	andlw	0xF0   ; mask input (last 4 pins) from columns 
+	
 	movwf	Col_State, A
 	return
 	
@@ -51,135 +50,135 @@ Keypad_Read:
 	call	delay
 	
 	movf	Row_State, W, A 
-	iorwf	Col_State, A	    ; combine both states to make a byte
+	iorwf	Col_State, W, A	    ; combine both states to make a byte
+	nop
 	
 	movwf	State, A ; move byte into variable State
 	
 	movlw   0xFF
 	cpfseq  State, A      ; skip next if State == 0xFF
-	goto    NoKey             ; W != State ? continue checking
-	movlw   0x00              ; no key pressed, return 0
+	goto    Check1             ; W != State ? continue checking
+	
+	movlw	0x77
 	return
 	
-	NoKey:
-
-	    ; ----------------------------
+	Check1:
 	    ; Key 1 ? 0x77
-	    ; ----------------------------
-	    movlw   0x77
+	    movlw   0xEE
 	    cpfseq  State, A
 	    goto    Check2
-	    movlw   0x01              ; key 1
+	    movlw   0x31              ; key 1
 	    goto    Done
 
 	Check2:
 	    ; Key 2 ? 0x7B
-	    movlw   0x7B
+	    movlw   0xED
 	    cpfseq  State, A
 	    goto    Check3
-	    movlw   0x02              ; key 2
+	    movlw   0x32              ; key 2
 	    goto    Done
 
 	Check3:
 	    ; Key 3 ? 0x7D
-	    movlw   0x7D
+	    movlw   0xEB
 	    cpfseq  State, A
 	    goto    CheckF
-	    movlw   0x03              ; key 3
+	    movlw   0x33              ; key 3
 	    goto    Done
 
 	CheckF:
 	    ; Key F ? 0x7E
-	    movlw   0x7E
+	    movlw   0xE7
 	    cpfseq  State, A
 	    goto    Check4
-	    movlw   0x0F              ; key F
+	    movlw   0x46              ; key F
 	    goto    Done
 
 	Check4:
 	    ; Key 4 ? 0xB7
-	    movlw   0xB7
+	    movlw   0xDE
 	    cpfseq  State, A
 	    goto    Check5
-	    movlw   0x04
+	    movlw   0x34
 	    goto    Done
 
 	Check5:
-	    movlw   0xBB
+	    movlw   0xDD
 	    cpfseq  State, A
 	    goto    Check6
-	    movlw   0x05
+	    movlw   0x35
 	    goto    Done
 
 	Check6:
-	    movlw   0xBD
+	    movlw   0xDB
 	    cpfseq  State, A
 	    goto    CheckE
-	    movlw   0x06
+	    movlw   0x36
 	    goto    Done
 
 	CheckE:
-	    movlw   0xBE
+	    movlw   0xD7
 	    cpfseq  State, A
 	    goto    Check7
-	    movlw   0x0E
+	    movlw   0x45
 	    goto    Done
 
 	Check7:
-	    movlw   0xD7
+	    movlw   0xBE
 	    cpfseq  State, A
 	    goto    Check8
-	    movlw   0x07
+	    movlw   0x37
 	    goto    Done
 
 	Check8:
-	    movlw   0xDB
+	    movlw   0xBD
 	    cpfseq  State, A
 	    goto    Check9
-	    movlw   0x08
+	    movlw   0x38
 	    goto    Done
 
 	Check9:
-	    movlw   0xDD
+	    movlw   0xBB
 	    cpfseq  State, A
 	    goto    CheckD
-	    movlw   0x09
+	    movlw   0x39
 	    goto    Done
 
 	CheckD:
-	    movlw   0xDE
+	    movlw   0xB7
 	    cpfseq  State, A
 	    goto    CheckA
-	    movlw   0x0D
+	    movlw   0x44
 	    goto    Done
 
 	CheckA:
-	    movlw   0xE7
+	    movlw   0x7E
 	    cpfseq  State, A
 	    goto    Check0
-	    movlw   0x0A
+	    movlw   0x41
 	    goto    Done
 
 	Check0:
-	    movlw   0xEB
+	    movlw   0x7D
 	    cpfseq  State, A
 	    goto    CheckB
-	    movlw   0x00
+	    movlw   0x30
 	    goto    Done
 
 	CheckB:
-	    movlw   0xED
+	    movlw   0x7B
 	    cpfseq  State, A
 	    goto    CheckC
-	    movlw   0x0B
+	    movlw   0x42
 	    goto    Done
 
 	CheckC:
-	    movlw   0xEE
+	    movlw   0x77
 	    cpfseq  State, A
 	    goto    Done        ; none matched, fall through
-	    movlw   0x0C
-
+	    movlw   0x43
+	    
+	    
 	Done:
 	    return
 
