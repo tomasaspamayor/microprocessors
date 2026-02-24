@@ -17,11 +17,18 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+<<<<<<< HEAD
       <itemPath>LCD.S</itemPath>
       <itemPath>ACD.s</itemPath>
       <itemPath>UART.s</itemPath>
       <itemPath>main.s</itemPath>
       <itemPath>config.s</itemPath>
+=======
+      <itemPath>config.s</itemPath>
+      <itemPath>main.s</itemPath>
+      <itemPath>UART.s</itemPath>
+      <itemPath>LCD.s</itemPath>
+>>>>>>> keypad
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -32,7 +39,11 @@
         <targetDevice>PIC18F87K22</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
+<<<<<<< HEAD
         <platformTool>Simulator</platformTool>
+=======
+        <platformTool>pk4hybrid</platformTool>
+>>>>>>> keypad
         <languageToolchain>pic-as</languageToolchain>
         <languageToolchainVersion>3.10</languageToolchainVersion>
         <platform>3</platform>
@@ -71,12 +82,15 @@
         <property key="codecoverage.enabled" value="Disable"/>
         <property key="codecoverage.enableoutputtofile" value="false"/>
         <property key="codecoverage.outputfile" value=""/>
+<<<<<<< HEAD
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
         <property key="lastid" value=""/>
+=======
+>>>>>>> keypad
         <property key="oscillator.auxfrequency" value="120"/>
         <property key="oscillator.auxfrequencyunit" value="Mega"/>
         <property key="oscillator.frequency" value="1"/>
@@ -101,6 +115,7 @@
                   value="toolpack.updateoptions.uselatestoolpack"/>
         <property key="toolpack.updateoptions.packversion"
                   value="Press to select which tool pack to use"/>
+<<<<<<< HEAD
         <property key="tracecontrol.include.timestamp" value="summarydataenabled"/>
         <property key="tracecontrol.select" value="0"/>
         <property key="tracecontrol.stallontracebufferfull" value="false"/>
@@ -108,6 +123,8 @@
         <property key="tracecontrol.tracebufmax" value="546000"/>
         <property key="tracecontrol.tracefile" value="defmplabxtrace.log"/>
         <property key="tracecontrol.traceresetonrun" value="false"/>
+=======
+>>>>>>> keypad
         <property key="uart0io.output" value="window"/>
         <property key="uart0io.outputfile" value=""/>
         <property key="uart0io.uartioenabled" value="false"/>
@@ -237,8 +254,11 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0035_CORE_UNIMPLEMENTED_RAMACCESS_NOTRAP"
                   value="report"/>
+<<<<<<< HEAD
         <property key="warningmessagebreakoptions.W0036_UNIMPLEMENTED_INSTRUCTION"
                   value="report"/>
+=======
+>>>>>>> keypad
         <property key="warningmessagebreakoptions.W0040_FPU_DIFF_CP10_CP11"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0041_FPU_ACCESS_DENIED"
@@ -381,6 +401,7 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0247_ADC_CONVERSION_BAD_RESSEL"
                   value="report"/>
+<<<<<<< HEAD
         <property key="warningmessagebreakoptions.W0300_NVM_WR_BEFORE_KEY_SEQ"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
@@ -388,6 +409,10 @@
         <property key="warningmessagebreakoptions.W0500_BMX_EXECUTE_OUTSIDE_BOUNDARY"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0501_BMX_WRITE_IRAM" value="report"/>
+=======
+        <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
+                  value="report"/>
+>>>>>>> keypad
         <property key="warningmessagebreakoptions.W0600_WDT_2ND_WDT_MR_WRITE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0601_WDT_EXPIRED" value="report"/>
@@ -545,6 +570,7 @@
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Simulator>
+<<<<<<< HEAD
       <Tool>
         <property key="codecoverage.enabled" value="Disable"/>
         <property key="codecoverage.enableoutputtofile" value="false"/>
@@ -1023,6 +1049,8 @@
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Tool>
+=======
+>>>>>>> keypad
       <pic-as-assembler>
         <property key="fmax-errors" value="20"/>
         <property key="list-custom-assembler-options" value=""/>
@@ -1043,14 +1071,25 @@
         <property key="summary-file" value="false"/>
         <property key="summary-hex" value="false"/>
         <property key="summary-mem" value="true"/>
+<<<<<<< HEAD
         <property key="summary-psect" value="false"/>
+=======
+        <property key="summary-psect" value="true"/>
+>>>>>>> keypad
         <property key="summary-sha1" value="false"/>
         <property key="summary-sha256" value="false"/>
         <property key="summary-xml" value="false"/>
         <property key="summary-xmlfull" value="false"/>
+<<<<<<< HEAD
       </pic-as-global>
       <pic-as-linker>
         <property key="linker-callgraph" value="std"/>
+=======
+        <appendMe value="-Wa,-a -Wl,-Map=output.map"/>
+      </pic-as-global>
+      <pic-as-linker>
+        <property key="linker-callgraph" value="full"/>
+>>>>>>> keypad
         <property key="linker-checksum" value=""/>
         <property key="linker-custom-options" value=""/>
         <property key="linker-fill" value=""/>
@@ -1066,6 +1105,12 @@
         <property key="linker-rom" value=""/>
         <property key="linker-serial" value=""/>
       </pic-as-linker>
+<<<<<<< HEAD
+=======
+      <pk4hybrid>
+        <property key="debugoptions.useswbreakpoints" value="true"/>
+      </pk4hybrid>
+>>>>>>> keypad
     </conf>
   </confs>
 </configurationDescriptor>

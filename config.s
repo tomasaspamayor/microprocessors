@@ -2,7 +2,11 @@
 
 ; Assembly source line config statements
 
+<<<<<<< HEAD
  #include <xc.inc>
+=======
+	#include <xc.inc>
+>>>>>>> keypad
 
 ; CONFIG1L
   CONFIG  RETEN = ON            ; VREG Sleep Enable bit (Enabled)

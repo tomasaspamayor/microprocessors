@@ -1,5 +1,6 @@
 #include <xc.inc>
 
+<<<<<<< HEAD
 global  LCD_Setup, LCD_Write_Message, LCD_Write_Hex
 
 psect	udata_acs   ; named variables in access ram
@@ -11,6 +12,16 @@ LCD_counter:	ds 1	; reserve 1 byte for counting through nessage
 
 PSECT	udata_acs_ovr,space=1,ovrld,class=COMRAM
 LCD_hex_tmp:	ds 1    ; reserve 1 byte for variable LCD_hex_tmp
+=======
+global  LCD_Setup, LCD_Write_Message, LCD_Clear, LCD_Newline, LCD_Send_Byte_D, LCD_delay_ms
+
+psect	udata_acs   ; named variables in access ram
+LCD_cnt_l:	ds 1   ; reserve 1 byte for variable LCD_cnt_l
+LCD_cnt_h:	ds 1   ; reserve 1 byte for variable LCD_cnt_h
+LCD_cnt_ms:	ds 1   ; reserve 1 byte for ms counter
+LCD_tmp:	ds 1   ; reserve 1 byte for temporary use
+LCD_counter:	ds 1   ; reserve 1 byte for counting through nessage
+>>>>>>> keypad
 
 	LCD_E	EQU 5	; LCD enable bit
     	LCD_RS	EQU 4	; LCD register select bit
@@ -49,6 +60,7 @@ LCD_Setup:
 	call	LCD_delay_x4us
 	return
 
+<<<<<<< HEAD
 LCD_Write_Hex:			; Writes byte stored in W as hex
 	movwf	LCD_hex_tmp, A
 	swapf	LCD_hex_tmp, W, A	; high nibble first
@@ -69,6 +81,13 @@ LCD_Write_Message:	    ; Message stored at FSR2, length stored in W
 	movwf   LCD_counter, A
 LCD_Loop_message:
 	movf    POSTINC2, W, A
+=======
+LCD_Write_Message:	    ; Message stored at FSR2, length stored in W
+	movwf   LCD_counter, A
+LCD_Loop_message:
+	tblrd*+	
+	movf	TABLAT, W
+>>>>>>> keypad
 	call    LCD_Send_Byte_D
 	decfsz  LCD_counter, A
 	bra	LCD_Loop_message
@@ -123,6 +142,22 @@ LCD_Enable:	    ; pulse enable bit LCD_E for 500ns
 	nop
 	bcf	LATB, LCD_E, A	    ; Writes data to LCD
 	return
+<<<<<<< HEAD
+=======
+	
+LCD_Clear:
+	movlw	00000001B	    ; Display clear
+	call	LCD_Send_Byte_I
+	movlw	2		; wait 2ms
+	call	LCD_delay_ms
+	
+LCD_Newline: 
+	movlw	11000000
+	call	LCD_Send_Byte_I
+	movlw	2		; wait 2ms
+	call	LCD_delay_ms
+	
+>>>>>>> keypad
     
 ; ** a few delay routines below here as LCD timing can be quite critical ****
 LCD_delay_ms:		    ; delay given in ms in W
@@ -152,4 +187,10 @@ lcdlp1:	decf 	LCD_cnt_l, F, A	; no carry when 0x00 -> 0xff
 	return			; carry reset so return
 
 
+<<<<<<< HEAD
 end
+=======
+    end
+
+
+>>>>>>> keypad
