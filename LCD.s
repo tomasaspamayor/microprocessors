@@ -8,6 +8,19 @@ LCD_cnt_h:	ds 1	; reserve 1 byte for variable LCD_cnt_h
 LCD_cnt_ms:	ds 1	; reserve 1 byte for ms counter
 LCD_tmp:	ds 1	; reserve 1 byte for temporary use
 LCD_counter:	ds 1	; reserve 1 byte for counting through nessage
+    
+; for the multiplier
+ARG1L:      ds 1               ; low byte of first argument
+ARG1H:      ds 1               ; high byte of first argument
+ARG2L:      ds 1               ; low byte of second argument
+ARG2H:      ds 1               ; high byte of second argument
+
+RES0:       ds 1               ; result byte 0 (LSB)
+RES1:       ds 1               ; result byte 1
+RES2:       ds 1               ; result byte 2
+RES3:       ds 1               ; result byte 3 (MSB)
+    
+    
 
 PSECT	udata_acs_ovr,space=1,ovrld,class=COMRAM
 LCD_hex_tmp:	ds 1    ; reserve 1 byte for variable LCD_hex_tmp
@@ -54,6 +67,7 @@ LCD_Write_Hex:			; Writes byte stored in W as hex
 	swapf	LCD_hex_tmp, W, A	; high nibble first
 	call	LCD_Hex_Nib
 	movf	LCD_hex_tmp, W, A	; then low nibble
+	
 LCD_Hex_Nib:			; writes low nibble as hex character
 	andlw	0x0F
 	movwf	LCD_tmp, A
@@ -65,10 +79,18 @@ LCD_Hex_Nib:			; writes low nibble as hex character
 	call	LCD_Send_Byte_D ; write out ascii
 	return	
 	
+LCD_Dec_Nib:
+    
+	return
+	
 LCD_Write_Message:	    ; Message stored at FSR2, length stored in W
 	movwf   LCD_counter, A
 LCD_Loop_message:
 	movf    POSTINC2, W, A
+	call    LCD_Send_Byte_D
+	decfsz  LCD_counter, A
+	bra	LCD_Loop_message
+	return
 
 ;LCD_Loop_message:
 ;	tblrd*+	
@@ -168,6 +190,59 @@ lcdlp1:	decf 	LCD_cnt_l, F, A	; no carry when 0x00 -> 0xff
 	bc 	lcdlp1		; carry, then loop again
 	return			; carry reset so return
 
+	
+; arithmetic functions ================================================================================ 
+	
+sxt_multiply:
+    MOVF    ARG1L, W, A
+    MULWF   ARG2L, A           ; ARG1L * ARG2L ->
+                              ; PRODH:PRODL
+    MOVFF   PRODH, RES1       ; move PRODH to RES1 (no ,A possible)
+    MOVFF   PRODL, RES0       ; move PRODL to RES0 (no ,A possible)
 
+    MOVF    ARG1H, W, A
+    MULWF   ARG2H, A           ; ARG1H * ARG2H ->
+                              ; PRODH:PRODL
+    MOVFF   PRODH, RES3
+    MOVFF   PRODL, RES2
+
+    MOVF    ARG1L, W, A
+    MULWF   ARG2H, A           ; ARG1L * ARG2H ->
+                              ; PRODH:PRODL
+    MOVF    PRODL, W, A
+    ADDWF   RES1, F, A         ; Add cross
+    MOVF    PRODH, W, A           ; products
+    ADDWFC  RES2, F, A
+    CLRF    WREG, A
+    ADDWFC  RES3, F, A
+
+    MOVF    ARG1H, W, A
+    MULWF   ARG2L, A           ; ARG1H * ARG2L ->
+                              ; PRODH:PRODL
+    MOVF    PRODL, W, A
+    ADDWF   RES1, F, A         ; Add cross
+    MOVF    PRODH, W, A           ; products
+    ADDWFC  RES2, F, A
+    CLRF    WREG, A
+    ADDWFC  RES3, F, A
+
+    BTFSS   ARG2H, 7, A           ; ARG2H:ARG2L neg?
+    BRA     SIGN_ARG1          ; no, check ARG1
+    MOVF    ARG1L, W, A
+    SUBWF   RES2, F, A
+    MOVF    ARG1H, W, A
+    SUBWFB  RES3, F, A         ; SIGN_ARG1
+
+SIGN_ARG1:
+    BTFSS   ARG1H, 7, A           ; ARG1H:ARG1L neg?
+    BRA     CONT_CODE          ; no, done
+    MOVF    ARG2L, W, A
+    SUBWF   RES2, F, A
+    MOVF    ARG2H, W, A
+    SUBWFB  RES3, F, A
+
+CONT_CODE:
+    return
 
 end
+  
